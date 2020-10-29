@@ -1,0 +1,7 @@
+{
+  "name": "yarn-plugin-skypack-test",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "yarn remove preact; yarn add --dev preact@skypack:~10.4.7 && node --experimental-import-meta-resolve ./test.mjs"
+  }
+}

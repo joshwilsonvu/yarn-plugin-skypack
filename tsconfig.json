@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "commonjs",
+    "target": "es2018",
+    "lib": [
+      "es2018", "es2019"
+    ]
+  },
+  "include": [
+    "sources/**/*.ts"
+  ]
+}
