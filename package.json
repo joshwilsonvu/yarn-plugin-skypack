@@ -20,7 +20,6 @@
   "scripts": {
     "prepack": "yarn run build",
     "build": "builder build plugin && yarn plugin import ./bundles/@yarnpkg/plugin-skypack.js",
-    "dev": "builder build plugin --no-minify && yarn plugin import ./bundles/@yarnpkg/plugin-skypack.js",
     "test": "yarn ./test run test"
   },
   "repository": {

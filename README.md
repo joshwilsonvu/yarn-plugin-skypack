@@ -18,11 +18,11 @@ Instead of downloading packages from the npm registry to disk, packages
 installed with the `skypack:` protocol will only save a skeleton file
 that imports the package from the Skypack CDN.
 
-For example, running `yarn install skypack:react` will write something
+For example, running `yarn install react@skypack:latest` will write something
 like the following to disk:
 
 ```javascript
-export * from "https://cdn.skypack.dev/react@16.14.0";
+export * from "https://cdn.skypack.dev/react@17.0.1";
 ```
 
 No need to change your imports; `import React from "react"` will continue
@@ -39,11 +39,11 @@ to work as usual.
   it normally.
 
 - **Modern optimizations**: `yarn-plugin-skypack` uses
-  [pinned URLs](https://docs.skypack.dev/lookup-urls/pinned-urls-optimized)
-  for maximum performance and cacheablility. Pinned URLs come with a few
-  other benefits too, like optimizing responses for each browser and
-  preventing request waterfalls.
-<!-- 
+[pinned URLs](https://docs.skypack.dev/lookup-urls/pinned-urls-optimized)
+for maximum performance and cacheablility. Pinned URLs come with a few
+other benefits too, like optimizing responses for each browser and
+preventing request waterfalls.
+<!--
 - **Export maps**: Some packages use [export maps](https://nodejs.org/api/packages.html#packages_exports)
   to specify what subpaths in a package you are allowed to import from.
   `yarn-plugin-skypack` makes sure to support these, so you can only
