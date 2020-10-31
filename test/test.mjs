@@ -72,7 +72,7 @@ async function run() {
     const { stdout } = await execa("yarn", ["add", install]);
     assert.match(
       stripAnsi(stdout),
-      /can't be found in the cache and will be generated with Skypack/,
+      /can't be found in the cache and will be generated with Skypack|had to be fetched/,
       `yarn add ${install} didn't generate a fresh Skypack skeleton file`
     );
 
