@@ -38,7 +38,7 @@ export class SkypackSkeletonFetcher implements Fetcher {
           `${structUtils.prettyLocator(
             opts.project.configuration,
             locator
-          )} can't be found in the cache and will be generated from Skypack`
+          )} can't be found in the cache and will be generated with Skypack`
         ),
       loader: () => this.generate(locator, opts),
       skipIntegrityCheck: opts.skipIntegrityCheck,
@@ -75,12 +75,11 @@ export class SkypackSkeletonFetcher implements Fetcher {
       );
     }
 
-    const rawExportMap: RawExportMap = data.exportMap || { ".": `./index.js` };
-    const exportMap: ExportMap =
-      typeof rawExportMap === `string` ? { ".": rawExportMap } : rawExportMap;
+    // const rawExportMap: RawExportMap = data.exportMap || { ".": `./index.mjs` };
+    // const exportMap: ExportMap =
+    //   typeof rawExportMap === `string` ? { ".": rawExportMap } : rawExportMap;
 
     const importUrl = `${CDN}${getIdentUrl(locator)}@${version}`;
-    opts.report.reportInfo(MessageName.UNNAMED, `Import url: ${importUrl}`);
 
     const response = await httpUtils.request(importUrl, null, {
       configuration: opts.project.configuration,
@@ -94,7 +93,7 @@ export class SkypackSkeletonFetcher implements Fetcher {
     const pinnedUrl = response.headers[`x-pinned-url`] as string | undefined;
     if (!pinnedUrl) {
       opts.report.reportWarning(
-        MessageName.UNNAMED,
+        MessageName.REMOTE_NOT_FOUND,
         `${structUtils.prettyLocator(
           opts.project.configuration,
           locator
@@ -102,29 +101,27 @@ export class SkypackSkeletonFetcher implements Fetcher {
       );
     }
     const fullUrl = pinnedUrl ? `${CDN}${pinnedUrl}` : importUrl;
-    opts.report.reportInfo(MessageName.UNNAMED, `full url: ${fullUrl}`);
-
-    const files = recurseExports(exportMap, "");
 
     return xfs.mktempPromise(async (cwd) => {
-      await Promise.all(
-        files.map(({ filePath, urlPath }) =>
-          xfs.writeFilePromise(
-            ppath.join(cwd, filePath as Filename),
-            skeleton(fullUrl + urlPath)
-          )
-        )
-      );
-      await xfs.writeJsonPromise(ppath.join(cwd, `package.json` as Filename), {
-        name: locator.name,
-        version,
-        type: "module",
-        description: data.description,
-        license: data.license,
-        main: `index.js`,
-        module: `index.js`,
-        exports: data.exportMap,
-      });
+      const mainFile = "index.mjs";
+      await Promise.all([
+        xfs.writeFilePromise(
+          ppath.join(cwd, mainFile as Filename),
+          skeleton(fullUrl)
+        ),
+        xfs.writeJsonPromise(ppath.join(cwd, `package.json` as Filename), {
+          name: locator.name,
+          version,
+          type: "module",
+          description: data.description || "",
+          license: data.license || "",
+          keywords: data.keywords || [],
+          main: mainFile,
+          module: mainFile,
+          browser: mainFile,
+          files: [mainFile],
+        }),
+      ]);
 
       return tgzUtils.makeArchiveFromDirectory(cwd, {
         prefixPath: structUtils.getIdentVendorPath(locator),

@@ -43,11 +43,11 @@ to work as usual.
   for maximum performance and cacheablility. Pinned URLs come with a few
   other benefits too, like optimizing responses for each browser and
   preventing request waterfalls.
-
+<!-- 
 - **Export maps**: Some packages use [export maps](https://nodejs.org/api/packages.html#packages_exports)
   to specify what subpaths in a package you are allowed to import from.
   `yarn-plugin-skypack` makes sure to support these, so you can only
-  import the code you need.
+  import the code you need. -->
 
 ## Caveats
 
